@@ -3,15 +3,16 @@ project(math)
 
 enable_testing()
 
-include(externals.cmake)
-AddExternals(googletest logger)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup(TARGETS)
 
-set(libName ${PROJECT_NAME})
-add_library(${libName} fibonacci.cpp)
-target_include_directories(${libName} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
-target_link_libraries(${libName} PUBLIC logger)
+add_library(math fibonacci.cpp)
+target_include_directories(math
+   PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+   $<INSTALL_INTERFACE:include>)
+target_link_libraries(math PUBLIC CONAN_PKG::logger)
 
-set(testName ${PROJECT_NAME}_unittest)
-add_executable(${testName} math-test.cpp)
-target_link_libraries(${testName} PUBLIC ${libName} gmock gmock_main)
-add_test(${testName} ${testName})
+add_executable(math_test math-test.cpp)
+target_link_libraries(math_test math CONAN_PKG::gtest)
+add_test(NAME math_test COMMAND $<TARGET_FILE:math_test>)
