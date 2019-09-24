@@ -10,7 +10,7 @@ class MathConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=False"
-    generators = "cmake"
+    generators = "cmake_find_package"
     requires = ["logger/0.1.0@grifcj/stable"]
     build_requires = ["gtest/1.8.1@bincrafters/stable"]
 
@@ -21,7 +21,7 @@ class MathConan(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
-        cmake.build(target='test')
+        cmake.test()
 
     def package(self):
         self.copy("*.h", dst="include")
