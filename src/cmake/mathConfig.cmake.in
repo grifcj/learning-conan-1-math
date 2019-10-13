@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(logger REQUIRED)
+
+if (NOT TARGET math::math)
+   include(${CMAKE_CURRENT_LIST_DIR}/mathTargets.cmake)
+endif()

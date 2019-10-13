@@ -1,6 +1,6 @@
-#include "fibonacci.h"
+#include "math/fibonacci.h"
 
-#include "logger.h"
+#include "logger/logger.h"
 
 int Fibonacci(int nElements)
 {

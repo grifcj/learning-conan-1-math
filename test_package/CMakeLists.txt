@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(PackageTest CXX)
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup(TARGETS)
+find_package(math REQUIRED)
 
 add_executable(example example.cpp)
-target_link_libraries(example CONAN_PKG::math)
+target_link_libraries(example PUBLIC math::math)
+
+enable_testing()
+add_test(NAME example COMMAND $<TARGET_FILE:example>)

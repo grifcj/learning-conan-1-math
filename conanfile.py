@@ -1,36 +1,39 @@
-from conans import ConanFile, CMake, tools
+import os
+from conans import ConanFile, CMake, python_requires
+
+base = python_requires("conanbase/1.0.0-nightly@grifcj/dev")
 
 class MathConan(ConanFile):
     name = "math"
-    version = "0.1.0"
-    license = "Beerware"
-    author = "Connor Griffith grifcj@gmail.com"
-    url = "https://github.com/grifcj/cmake-math"
-    description = "A logger that punked Chuck Norris"
-    settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False]}
-    default_options = "shared=False"
-    generators = "cmake_find_package"
-    requires = ["logger/0.1.0@grifcj/stable"]
-    build_requires = ["gtest/1.8.1@bincrafters/stable"]
+    version = "1.0.0-nightly"
+    scm = {
+        "type": "git",
+        "url": "https://github.com/grifcj/cmake-math",
+        "revision": "auto"
+    }
+    requires = "logger/1.0.0-nightly@grifcj/dev"
+    build_requires = (
+            "cmake_extensions/1.0.0-nightly@grifcj/dev",
+            "gtest/1.8.1@bincrafters/stable")
+    generators = "cmake_paths"
 
-    def source(self):
-        self.run("git clone https://github.com/grifcj/cmake-math .")
+    def _configure_cmake(self):
+        cmake = CMake(self)
+        conan_paths = os.path.join(self.build_folder, "conan_paths.cmake")
+        cmake.definitions["CONAN_PACKAGE_VERSION"] = self.version.split('-')[0]
+        cmake.definitions["CMAKE_FIND_PACKAGE_PREFER_CONFIG"] = "TRUE"
+        cmake.definitions["CMAKE_PROJECT_INCLUDE"] = conan_paths
+        cmake.generator = "Ninja"
+        cmake.configure()
+        return cmake
 
     def build(self):
-        cmake = CMake(self)
-        cmake.configure()
+        cmake = self._configure_cmake()
         cmake.build()
         cmake.test()
 
     def package(self):
-        self.copy("*.h", dst="include")
-        self.copy("*.lib", dst="lib", keep_path=False)
-        self.copy("*.dll", dst="bin", keep_path=False)
-        self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.dylib", dst="lib", keep_path=False)
-        self.copy("*.a", dst="lib", keep_path=False)
+        cmake = self._configure_cmake()
+        cmake.install()
 
-    def package_info(self):
-        self.cpp_info.libs = ["math"]
 

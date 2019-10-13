@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "fibonacci.h"
+#include "math/fibonacci.h"
 
 int main()
 {
