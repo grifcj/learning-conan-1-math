@@ -16,5 +16,9 @@ class MathConan(base.get_conanfile()):
             "cmake_extensions/1.0.0-nightly@grifcj/dev",
             "gtest/1.8.1@bincrafters/stable")
 
+    def _make_cmake(self):
+        cmake = super()._make_cmake()
+        cmake.definitions["logger_DIR"] = ""
+        return cmake
 
 
