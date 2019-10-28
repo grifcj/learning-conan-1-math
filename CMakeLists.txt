@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(math-super)
-
-include(CMakeExtensions)
-declare_source_package(math)
+project(math VERSION ${PACKAGE_VERSION})
 
 add_subdirectory(src)
 
