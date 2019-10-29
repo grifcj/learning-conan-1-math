@@ -10,3 +10,4 @@ target_link_libraries(math PUBLIC logger::logger)
 
 include(CMakeExtensions)
 install_project()
+generate_cpp_info(math)
